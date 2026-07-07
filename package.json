@@ -4,8 +4,9 @@
   "description": "URL shortener app using Node.js",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "dev": "ts-node -r tsconfig-paths/register src/server.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/server.js",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,7 +16,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "prisma": "^7.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -25,6 +27,9 @@
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.7.0",
     "prettier": "^3.9.4",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.9.0",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.63.0"

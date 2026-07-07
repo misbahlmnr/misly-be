@@ -30,8 +30,8 @@ Target:
 - [x] Konfigurasi Prettier
 - [x] Tambahkan lint script
 - [x] Tambahkan format script
-- [ ] Setup import alias
-- [ ] Rapikan struktur folder
+- [x] Setup import alias
+- [x] Rapikan struktur folder
 
 Target:
 
@@ -42,14 +42,14 @@ Target:
 
 ## 3. SETUP DATABASE
 
-- [ ] Install PostgreSQL
-- [ ] Buat database
-- [ ] Install Prisma
-- [ ] Inisialisasi Prisma
-- [ ] Setup environment variable
-- [ ] Hubungkan Prisma ke PostgreSQL
-- [ ] Buat migration pertama
-- [ ] Test koneksi database
+- [x] Install PostgreSQL
+- [x] Buat database
+- [x] Install Prisma
+- [x] Inisialisasi Prisma
+- [x] Setup environment variable
+- [x] Hubungkan Prisma ke PostgreSQL
+- [x] Buat migration pertama
+- [x] Test koneksi database
 
 Target:
 
@@ -60,10 +60,10 @@ Target:
 
 ## 4. SETUP ENVIRONMENT
 
-- [ ] Buat file `.env`
-- [ ] Buat file `.env.example`
+- [x] Buat file `.env`
+- [x] Buat file `.env.example`
 - [ ] Setup APP_PORT
-- [ ] Setup DATABASE_URL
+- [x] Setup DATABASE_URL
 - [ ] Setup JWT_SECRET
 - [ ] Setup validation environment
 
