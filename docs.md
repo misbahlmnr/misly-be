@@ -13,7 +13,7 @@
 - [x] Tambahkan script build
 - [ ] Tambahkan script production
 - [x] Jalankan server pertama
-- [ ] Test endpoint health check
+- [x] Test endpoint health check
 
 Target:
 
