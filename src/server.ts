@@ -1,14 +1,15 @@
 import express from "express";
 
 const app = express();
+const port = Number(process.env.APP_PORT || 3000);
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.json({ message: "API running" });
 });
 
-app.get("/health", (req, res) => {
+app.get("/health", (_, res) => {
   res.json({
     status: "UP",
     timestamp: new Date().toISOString(),
@@ -16,6 +17,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

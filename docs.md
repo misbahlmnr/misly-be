@@ -62,9 +62,9 @@ Target:
 
 - [x] Buat file `.env`
 - [x] Buat file `.env.example`
-- [ ] Setup APP_PORT
+- [x] Setup APP_PORT
 - [x] Setup DATABASE_URL
-- [ ] Setup JWT_SECRET
+- [x] Setup JWT_SECRET
 - [ ] Setup validation environment
 
 Target:
