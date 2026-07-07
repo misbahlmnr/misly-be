@@ -3,16 +3,16 @@
 ## 1. INITIALIZE APLIKASI
 
 - [x] Buat folder project
-- [ ] Jalankan `npm init`
-- [ ] Install TypeScript
-- [ ] Install Express
-- [ ] Install development dependencies
-- [ ] Generate `tsconfig.json`
-- [ ] Buat struktur folder awal
-- [ ] Tambahkan script development
-- [ ] Tambahkan script build
+- [x] Jalankan `npm init`
+- [x] Install TypeScript
+- [x] Install Express
+- [x] Install development dependencies
+- [x] Generate `tsconfig.json`
+- [x] Buat struktur folder awal
+- [x] Tambahkan script development
+- [x] Tambahkan script build
 - [ ] Tambahkan script production
-- [ ] Jalankan server pertama
+- [x] Jalankan server pertama
 - [ ] Test endpoint health check
 
 Target:
