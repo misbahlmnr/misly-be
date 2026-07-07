@@ -24,12 +24,12 @@ Target:
 
 ## 2. SETUP CODE QUALITY
 
-- [ ] Install ESLint
-- [ ] Install Prettier
-- [ ] Konfigurasi ESLint
-- [ ] Konfigurasi Prettier
-- [ ] Tambahkan lint script
-- [ ] Tambahkan format script
+- [x] Install ESLint
+- [x] Install Prettier
+- [x] Konfigurasi ESLint
+- [x] Konfigurasi Prettier
+- [x] Tambahkan lint script
+- [x] Tambahkan format script
 - [ ] Setup import alias
 - [ ] Rapikan struktur folder
 
