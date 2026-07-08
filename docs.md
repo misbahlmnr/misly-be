@@ -75,14 +75,14 @@ Target:
 
 ## 5. MEMBUAT MODULE USER
 
-- [ ] Buat schema User
-- [ ] Buat migration User
-- [ ] Buat repository User
-- [ ] Buat service User
-- [ ] Buat controller User
-- [ ] Buat route User
-- [ ] Endpoint get profile
-- [ ] Endpoint get user by id
+- [x] Buat schema User
+- [x] Buat migration User
+- [x] Buat repository User
+- [x] Buat service User
+- [x] Buat controller User
+- [x] Buat route User
+- [x] Endpoint get profile
+- [x] Endpoint get user by id
 
 Target:
 
