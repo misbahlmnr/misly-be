@@ -92,13 +92,13 @@ Target:
 
 ## 6. AUTHENTICATION
 
-- [ ] Install bcrypt
-- [ ] Install JWT
-- [ ] Endpoint register
-- [ ] Hash password
-- [ ] Validasi email unik
-- [ ] Endpoint login
-- [ ] Generate access token
+- [x] Install bcrypt
+- [x] Install JWT
+- [x] Endpoint register
+- [x] Hash password
+- [x] Validasi email unik
+- [x] Endpoint login
+- [x] Generate access token
 - [ ] Middleware authentication
 - [ ] Protected route
 
