@@ -1,3 +1,5 @@
+import { ConflictError } from "@/errors/conflict-error.js";
+import { NotFoundError } from "@/errors/not-found-error.js";
 import { UserRepository } from "./user.repository.js";
 import bcrypt from "bcrypt";
 
@@ -8,7 +10,7 @@ export class UserService {
     const existingUser = await this.userRepository.findByEmail(email);
 
     if (existingUser) {
-      throw new Error("User already exists");
+      throw new ConflictError("User already exists");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -21,7 +23,13 @@ export class UserService {
   }
 
   async getUserById(id: string) {
-    return this.userRepository.findById(id);
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    return user;
   }
 
   async getUserByEmail(email: string) {

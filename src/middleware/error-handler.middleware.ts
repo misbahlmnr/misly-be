@@ -1,11 +1,20 @@
 import { AppError } from "@/errors/app-error.js";
 import type { NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
+
+export const notFoundMiddleware = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
+  next(new AppError(`Cannot ${req.method} ${req.path}`, 404, "NOT_FOUND"));
+};
 
 export const errorHandlerMiddleware = (
   err: Error,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
@@ -17,7 +26,17 @@ export const errorHandlerMiddleware = (
     });
   }
 
-  console.log(err);
+  if (err instanceof ZodError) {
+    return res.status(400).json({
+      success: false,
+      message: err.issues[0]?.message ?? "Validation failed",
+      error: {
+        code: "VALIDATION_ERROR",
+      },
+    });
+  }
+
+  console.error(err);
 
   return res.status(500).json({
     success: false,

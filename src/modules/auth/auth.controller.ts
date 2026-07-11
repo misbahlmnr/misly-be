@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
 import type { AuthRequest } from "./auth.types.js";
+import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 
 export class AuthController {
   private authService = new AuthService();
@@ -31,7 +32,7 @@ export class AuthController {
     const userId = req.user?.userId;
 
     if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      throw new UnauthorizedError("Unauthorized");
     }
 
     const user = await this.authService.getProfile(userId);

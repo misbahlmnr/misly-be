@@ -1,7 +1,10 @@
 import express, { Router } from "express";
 import userRoutes from "./modules/users/user.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
-import { errorHandlerMiddleware } from "./middleware/error-handler.middleware.js";
+import {
+  errorHandlerMiddleware,
+  notFoundMiddleware,
+} from "./middleware/error-handler.middleware.js";
 
 const app = express();
 const api = Router();
@@ -44,6 +47,7 @@ api.use("/users", userRoutes);
 
 app.use("/api", api);
 
+app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 export default app;
