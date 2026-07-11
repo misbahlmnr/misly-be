@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
+import type { AuthRequest } from "./auth.types.js";
 
 export class AuthController {
   private authService = new AuthService();
@@ -23,6 +24,21 @@ export class AuthController {
     res.status(200).json({
       message: "Login successful",
       data: token,
+    });
+  };
+
+  getProfile = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await this.authService.getProfile(userId);
+
+    res.status(200).json({
+      message: "Profile fetched successfully",
+      data: user,
     });
   };
 }

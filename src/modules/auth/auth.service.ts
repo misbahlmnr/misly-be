@@ -30,4 +30,8 @@ export class AuthService {
 
     return { token };
   }
+
+  async getProfile(userId: string) {
+    return this.userService.getUserById(userId);
+  }
 }

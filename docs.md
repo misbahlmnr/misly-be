@@ -99,8 +99,8 @@ Target:
 - [x] Validasi email unik
 - [x] Endpoint login
 - [x] Generate access token
-- [ ] Middleware authentication
-- [ ] Protected route
+- [x] Middleware authentication
+- [x] Protected route
 
 Target:
 
@@ -110,10 +110,10 @@ Target:
 
 ## 7. REQUEST VALIDATION
 
-- [ ] Install Zod
-- [ ] Buat schema register
-- [ ] Buat schema login
-- [ ] Buat validation middleware
+- [x] Install Zod
+- [x] Buat schema register
+- [x] Buat schema login
+- [x] Buat validation middleware
 - [ ] Standardisasi response error
 
 Target:
