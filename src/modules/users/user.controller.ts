@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { UserService } from "./user.service.js";
+import { sendSuccess } from "@/utils/api-response.js";
 
 export class UserController {
   private userService = new UserService();
@@ -9,17 +10,32 @@ export class UserController {
 
     const user = await this.userService.createUser(email, password);
 
-    res.status(201).json(user);
+    return sendSuccess({
+      res,
+      data: user,
+      message: "User created successfully",
+      statusCode: 201,
+    });
   };
 
-  getUsers = async (req: Request, res: Response) => {
+  getUsers = async (_req: Request, res: Response) => {
     const users = await this.userService.getUsers();
-    res.status(200).json(users);
+
+    return sendSuccess({
+      res,
+      data: users,
+      message: "Users fetched successfully",
+    });
   };
 
   getUserById = async (req: Request, res: Response) => {
     const { id } = req.params;
     const user = await this.userService.getUserById(id as string);
-    res.status(200).json(user);
+
+    return sendSuccess({
+      res,
+      data: user,
+      message: "User fetched successfully",
+    });
   };
 }

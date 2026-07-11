@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
 import type { AuthRequest } from "./auth.types.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
+import { sendSuccess } from "@/utils/api-response.js";
 
 export class AuthController {
   private authService = new AuthService();
@@ -11,9 +12,11 @@ export class AuthController {
 
     const user = await this.authService.register({ email, password });
 
-    res.status(201).json({
-      message: "User created successfully",
+    return sendSuccess({
+      res,
       data: user,
+      message: "User created successfully",
+      statusCode: 201,
     });
   };
 
@@ -22,9 +25,10 @@ export class AuthController {
 
     const token = await this.authService.login({ email, password });
 
-    res.status(200).json({
-      message: "Login successful",
+    return sendSuccess({
+      res,
       data: token,
+      message: "Login successful",
     });
   };
 
@@ -37,9 +41,10 @@ export class AuthController {
 
     const user = await this.authService.getProfile(userId);
 
-    res.status(200).json({
-      message: "Profile fetched successfully",
+    return sendSuccess({
+      res,
       data: user,
+      message: "Profile fetched successfully",
     });
   };
 }
