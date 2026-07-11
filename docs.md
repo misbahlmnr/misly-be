@@ -114,7 +114,7 @@ Target:
 - [x] Buat schema register
 - [x] Buat schema login
 - [x] Buat validation middleware
-- [ ] Standardisasi response error
+- [x] Standardisasi response error
 
 Target:
 
@@ -124,12 +124,12 @@ Target:
 
 ## 8. ERROR HANDLING
 
-- [ ] Buat custom error class
-- [ ] Global error handler
-- [ ] Handle validation error
-- [ ] Handle database error
-- [ ] Handle unauthorized error
-- [ ] Handle not found error
+- [x] Buat custom error class
+- [x] Global error handler
+- [x] Handle validation error
+- [x] Handle database error
+- [x] Handle unauthorized error
+- [x] Handle not found error
 
 Target:
 
