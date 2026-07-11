@@ -7,6 +7,12 @@ export class UserRepository {
         email,
         password,
       },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
@@ -14,6 +20,12 @@ export class UserRepository {
     return prisma.user.findUnique({
       where: {
         id,
+      },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -27,6 +39,13 @@ export class UserRepository {
   }
 
   async findAll() {
-    return prisma.user.findMany();
+    return prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 }
