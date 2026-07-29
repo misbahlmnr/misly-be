@@ -35,14 +35,13 @@ export class LinkRepository {
     });
   }
 
-  async update(id: string, originalUrl: string, shortCode: string) {
+  async update(id: string, originalUrl: string) {
     return prisma.link.update({
       where: {
         id,
       },
       data: {
         originalUrl,
-        shortCode,
       },
     });
   }

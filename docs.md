@@ -142,11 +142,11 @@ Target:
 - [x] Buat schema Link
 - [x] Relasi User dan Link
 - [x] Migration Link
-- [ ] Endpoint create short link
-- [ ] Endpoint get user links
-- [ ] Endpoint detail link
-- [ ] Endpoint update link
-- [ ] Endpoint delete link
+- [x] Endpoint create short link
+- [x] Endpoint get user links
+- [x] Endpoint detail link
+- [x] Endpoint update link
+- [x] Endpoint delete link
 
 Target:
 

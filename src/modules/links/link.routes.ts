@@ -11,5 +11,8 @@ const router = Router();
 
 router.get("/", authMiddleware, linkController.getLinks);
 router.post("/", authMiddleware, linkController.createLink);
+router.get("/:id", authMiddleware, linkController.getLinkById);
+router.put("/:id", authMiddleware, linkController.editLink);
+router.delete("/:id", authMiddleware, linkController.deleteLink);
 
 export default router;
