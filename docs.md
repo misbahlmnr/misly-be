@@ -139,9 +139,9 @@ Target:
 
 ## 9. MODULE SHORT LINK
 
-- [ ] Buat schema Link
-- [ ] Relasi User dan Link
-- [ ] Migration Link
+- [x] Buat schema Link
+- [x] Relasi User dan Link
+- [x] Migration Link
 - [ ] Endpoint create short link
 - [ ] Endpoint get user links
 - [ ] Endpoint detail link

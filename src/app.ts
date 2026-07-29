@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import userRoutes from "./modules/users/user.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
+import linkRoutes from "./modules/links/link.routes.js";
 import {
   errorHandlerMiddleware,
   notFoundMiddleware,
@@ -24,6 +25,9 @@ app.get("/", (req, res) => {
         create: "POST /api/users",
         getById: "GET /api/users/:id",
       },
+      links: {
+        create: "POST /api/links/:userId",
+      },
     },
   });
 });
@@ -44,6 +48,7 @@ api.get("/", (_, res) => {
 
 api.use("/auth", authRoutes);
 api.use("/users", userRoutes);
+api.use("/links", linkRoutes);
 
 app.use("/api", api);
 
