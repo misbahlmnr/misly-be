@@ -8,14 +8,6 @@ export class LinkRepository {
         shortCode,
         userId,
       },
-      select: {
-        id: true,
-        originalUrl: true,
-        shortCode: true,
-        userId: false,
-        createdAt: true,
-        updatedAt: true,
-      },
     });
   }
 

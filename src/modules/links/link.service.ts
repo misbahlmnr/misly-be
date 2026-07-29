@@ -2,6 +2,7 @@ import { ConflictError } from "@/errors/conflict-error.js";
 import type { LinkRepository } from "./link.repository.js";
 import { customAlphabet } from "nanoid";
 import { CHARACTERS } from "@/common/constant.js";
+import { linkToResponse } from "./link.mapper.js";
 
 export class LinkService {
   constructor(private readonly linkRepository: LinkRepository) {
@@ -23,9 +24,6 @@ export class LinkService {
       userId,
     );
 
-    return {
-      ...link,
-      shortUrl: `${process.env.BASE_URL}/${link.shortCode}`,
-    };
+    return linkToResponse(link);
   }
 }
