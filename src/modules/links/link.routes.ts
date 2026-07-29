@@ -9,6 +9,7 @@ const linkController = new LinkController(
 );
 const router = Router();
 
+router.get("/", authMiddleware, linkController.getLinks);
 router.post("/", authMiddleware, linkController.createLink);
 
 export default router;

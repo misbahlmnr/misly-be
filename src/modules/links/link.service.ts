@@ -29,4 +29,10 @@ export class LinkService {
 
     return linkToResponse(link);
   }
+
+  async getLinks(userId: string) {
+    return (await this.linkRepository.findManyByUserId(userId)).map(
+      linkToResponse,
+    );
+  }
 }
