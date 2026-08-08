@@ -6,6 +6,9 @@ import {
   errorHandlerMiddleware,
   notFoundMiddleware,
 } from "./middleware/error-handler.middleware.js";
+import { LinkController } from "./modules/links/link.controller.js";
+
+const linkController = new LinkController();
 
 const app = express();
 const api = Router();
@@ -31,6 +34,8 @@ app.get("/", (req, res) => {
     },
   });
 });
+
+app.get("/:shortCode", linkController.redirectByShortCode);
 
 api.get("/health", (_, res) => {
   res.json({

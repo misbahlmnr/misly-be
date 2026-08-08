@@ -169,10 +169,10 @@ Target:
 
 ## 11. REDIRECT SYSTEM
 
-- [ ] Endpoint redirect
-- [ ] Cari link berdasarkan short code
-- [ ] Redirect ke URL asli
-- [ ] Handle link tidak ditemukan
+- [x] Endpoint redirect
+- [x] Cari link berdasarkan short code
+- [x] Redirect ke URL asli
+- [x] Handle link tidak ditemukan
 
 Target:
 

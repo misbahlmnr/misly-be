@@ -1,5 +1,5 @@
 import { ConflictError } from "@/errors/conflict-error.js";
-import type { LinkRepository } from "./link.repository.js";
+import { LinkRepository } from "./link.repository.js";
 import { customAlphabet } from "nanoid";
 import { CHARACTERS } from "@/common/constant.js";
 import { linkToResponse } from "./link.mapper.js";
@@ -7,9 +7,7 @@ import { NotFoundError } from "@/errors/not-found-error.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 
 export class LinkService {
-  constructor(private readonly linkRepository: LinkRepository) {
-    this.linkRepository = linkRepository;
-  }
+  private linkRepository = new LinkRepository();
 
   async createLink(originalUrl: string, userId: string) {
     // TODO: Improve short code generation for production.
@@ -40,6 +38,16 @@ export class LinkService {
 
   async getLinkById(id: string) {
     const link = await this.linkRepository.findById(id);
+
+    if (!link) {
+      throw new NotFoundError("Link not found");
+    }
+
+    return linkToResponse(link);
+  }
+
+  async getLinkByShortCode(shortCode: string) {
+    const link = await this.linkRepository.findByShortCode(shortCode);
 
     if (!link) {
       throw new NotFoundError("Link not found");
