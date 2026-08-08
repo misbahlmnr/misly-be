@@ -156,10 +156,10 @@ Target:
 
 ## 10. SHORT CODE GENERATOR
 
-- [ ] Buat generator random code
-- [ ] Pastikan code unik
-- [ ] Validasi collision
-- [ ] Simpan ke database
+- [x] Buat generator random code
+- [x] Pastikan code unik
+- [x] Validasi collision
+- [x] Simpan ke database
 
 Target:
 
