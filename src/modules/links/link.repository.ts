@@ -1,4 +1,4 @@
-import { prisma } from "@/libs/prisma.js";
+import { prisma } from "@/lib/prisma.js";
 
 export class LinkRepository {
   async create(
