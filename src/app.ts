@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/:shortCode", linkController.redirectByShortCode);
+app.get("/:slug", linkController.redirectBySlug);
 
 api.get("/health", (_, res) => {
   res.json({

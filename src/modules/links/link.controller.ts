@@ -9,14 +9,19 @@ export class LinkController {
   private linkService = new LinkService();
 
   createLink = async (req: AuthRequest, res: Response) => {
-    const { originalUrl } = req.body;
+    const { originalUrl, title, customSlug } = req.body;
     const userId = req.user?.userId;
 
     if (!userId) {
       throw new UnauthorizedError("Unauthorized");
     }
 
-    const link = await this.linkService.createLink(originalUrl, userId);
+    const link = await this.linkService.createLink(
+      originalUrl,
+      userId,
+      title,
+      customSlug,
+    );
 
     return sendSuccess({
       res,
@@ -69,12 +74,13 @@ export class LinkController {
       throw new UnauthorizedError("Unauthorized");
     }
 
-    const { originalUrl } = req.body;
+    const { originalUrl, title } = req.body;
 
     const link = await this.linkService.editLink(
       id as string,
       originalUrl,
       userId,
+      title,
     );
 
     return sendSuccess({
@@ -103,18 +109,14 @@ export class LinkController {
     });
   };
 
-  redirectByShortCode = async (req: Request, res: Response) => {
-    const { shortCode } = req.params;
+  redirectBySlug = async (req: Request, res: Response) => {
+    const { slug } = req.params;
 
-    if (!shortCode) {
-      throw new NotFoundError("Short code is required");
+    if (!slug) {
+      throw new NotFoundError("Slug is required");
     }
 
-    const link = await this.linkService.getLinkByShortCode(shortCode as string);
-
-    if (!link) {
-      throw new NotFoundError("Link not found");
-    }
+    const link = await this.linkService.getLinkBySlug(slug as string);
 
     res.redirect(link.originalUrl);
   };

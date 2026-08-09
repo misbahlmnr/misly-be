@@ -9,22 +9,34 @@ import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 export class LinkService {
   private linkRepository = new LinkRepository();
 
-  async createLink(originalUrl: string, userId: string) {
-    // TODO: Improve short code generation for production.
-    // Currently we generate a random short code and rely on the database's unique constraint.
+  async createLink(
+    originalUrl: string,
+    userId: string,
+    title?: string | null,
+    customSlug?: string | null | undefined,
+  ) {
+    // TODO: Improve slug generation for production.
+    // Currently we generate a random slug and rely on the database's unique constraint.
     // In the future, implement a retry mechanism to handle the rare case of a collision.
-    const shortCode = customAlphabet(CHARACTERS, 6)();
+    let slug;
 
-    const existingLink = await this.linkRepository.findByShortCode(shortCode);
+    if (!customSlug) {
+      slug = customAlphabet(CHARACTERS, 6)();
+    } else {
+      slug = customSlug;
+    }
+
+    const existingLink = await this.linkRepository.findBySlug(slug);
 
     if (existingLink) {
-      throw new ConflictError("Short code already in use");
+      throw new ConflictError("Slug already in use");
     }
 
     const link = await this.linkRepository.create(
       originalUrl,
-      shortCode,
+      slug,
       userId,
+      title,
     );
 
     return linkToResponse(link);
@@ -46,8 +58,8 @@ export class LinkService {
     return linkToResponse(link);
   }
 
-  async getLinkByShortCode(shortCode: string) {
-    const link = await this.linkRepository.findByShortCode(shortCode);
+  async getLinkBySlug(slug: string) {
+    const link = await this.linkRepository.findBySlug(slug);
 
     if (!link) {
       throw new NotFoundError("Link not found");
@@ -56,7 +68,12 @@ export class LinkService {
     return linkToResponse(link);
   }
 
-  async editLink(id: string, originalUrl: string, userId: string) {
+  async editLink(
+    id: string,
+    originalUrl: string,
+    userId: string,
+    title?: string | null,
+  ) {
     const link = await this.linkRepository.findById(id);
 
     if (!link) {
@@ -67,7 +84,11 @@ export class LinkService {
       throw new UnauthorizedError("Unauthorized");
     }
 
-    const updatedLink = await this.linkRepository.update(id, originalUrl);
+    const updatedLink = await this.linkRepository.update(
+      id,
+      originalUrl,
+      title,
+    );
 
     return linkToResponse(updatedLink);
   }

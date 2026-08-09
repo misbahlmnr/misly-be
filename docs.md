@@ -182,10 +182,10 @@ Target:
 
 ## 12. CUSTOM SLUG
 
-- [ ] Tambahkan field custom slug
-- [ ] Validasi slug unik
-- [ ] Endpoint custom slug
-- [ ] Update slug
+- [x] Tambahkan field custom slug
+- [x] Validasi slug unik
+- [x] Endpoint custom slug
+- [x] Update slug
 
 Target:
 

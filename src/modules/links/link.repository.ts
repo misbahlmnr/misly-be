@@ -1,12 +1,18 @@
 import { prisma } from "@/libs/prisma.js";
 
 export class LinkRepository {
-  async create(originalUrl: string, shortCode: string, userId: string) {
+  async create(
+    originalUrl: string,
+    slug: string,
+    userId: string,
+    title?: string | null,
+  ) {
     return prisma.link.create({
       data: {
         originalUrl,
-        shortCode,
+        slug,
         userId,
+        ...(title !== undefined ? { title } : {}),
       },
     });
   }
@@ -19,10 +25,10 @@ export class LinkRepository {
     });
   }
 
-  async findByShortCode(shortCode: string) {
+  async findBySlug(slug: string) {
     return prisma.link.findUnique({
       where: {
-        shortCode,
+        slug,
       },
     });
   }
@@ -35,13 +41,14 @@ export class LinkRepository {
     });
   }
 
-  async update(id: string, originalUrl: string) {
+  async update(id: string, originalUrl: string, title?: string | null) {
     return prisma.link.update({
       where: {
         id,
       },
       data: {
         originalUrl,
+        ...(title !== undefined ? { title } : {}),
       },
     });
   }
