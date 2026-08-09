@@ -42,9 +42,8 @@
     "skipLibCheck": true,
 
     // Custom Alias Paths
-    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "exclude": ["node_modules", "dist", "prisma.config.ts"]
