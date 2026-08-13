@@ -34,15 +34,19 @@ export class LinkController {
   getLinks = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.userId;
 
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
     if (!userId) {
       throw new UnauthorizedError("Unauthorized");
     }
 
-    const links = await this.linkService.getLinks(userId);
+    const { data, meta } = await this.linkService.getLinks(userId, page, limit);
 
     return sendSuccess({
       res,
-      data: links,
+      data,
+      meta,
       message: "Links fetched successfully",
       statusCode: 200,
     });

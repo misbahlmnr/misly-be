@@ -42,10 +42,29 @@ export class LinkService {
     return linkToResponse(link);
   }
 
-  async getLinks(userId: string) {
-    return (await this.linkRepository.findManyByUserId(userId)).map(
-      linkToResponse,
+  async getLinks(userId: string, page = 1, limit = 10) {
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.max(1, Math.min(100, limit));
+
+    const { links, totalData } = await this.linkRepository.findManyByUserId(
+      userId,
+      safePage,
+      safeLimit,
     );
+
+    const totalPages = Math.ceil(totalData / safeLimit);
+
+    return {
+      data: links.map((link) => linkToResponse({ ...link, userId })),
+      meta: {
+        page: safePage,
+        limit: safeLimit,
+        totalPages,
+        totalData,
+        hasNextPage: safePage < totalPages,
+        hasPrevPage: safePage > 1,
+      },
+    };
   }
 
   async getLinkById(id: string) {

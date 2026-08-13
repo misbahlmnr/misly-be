@@ -1,8 +1,18 @@
 import type { Response } from "express";
 
+type MetaPagination = {
+  page: number;
+  limit: number;
+  totalPages: number;
+  totalData: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};
+
 type SendSuccessOptions<T> = {
   res: Response;
   data: T;
+  meta?: MetaPagination;
   message: string;
   statusCode?: number;
 };
@@ -10,6 +20,7 @@ type SendSuccessOptions<T> = {
 export function sendSuccess<T>({
   res,
   data,
+  meta,
   message,
   statusCode = 200,
 }: SendSuccessOptions<T>) {
@@ -17,5 +28,6 @@ export function sendSuccess<T>({
     success: true,
     message,
     data,
+    meta,
   });
 }

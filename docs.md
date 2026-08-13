@@ -221,10 +221,10 @@ Target:
 
 ## 14. PAGINATION
 
-- [ ] Pagination links
-- [ ] Limit
-- [ ] Page
-- [ ] Metadata pagination
+- [x] Pagination links
+- [x] Limit
+- [x] Page
+- [x] Metadata pagination
 
 Target:
 
