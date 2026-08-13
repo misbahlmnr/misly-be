@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import userRoutes from "./modules/users/user.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import linkRoutes from "./modules/links/link.routes.js";
+import analyticRoutes from "./modules/analytics/analytic.routes.js";
 import {
   errorHandlerMiddleware,
   notFoundMiddleware,
@@ -54,6 +55,7 @@ api.get("/", (_, res) => {
 api.use("/auth", authRoutes);
 api.use("/users", userRoutes);
 api.use("/links", linkRoutes);
+api.use("/analytics", analyticRoutes);
 
 app.use("/api", api);
 

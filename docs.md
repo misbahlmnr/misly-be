@@ -203,15 +203,15 @@ Contoh:
 
 ## 13. ANALYTICS
 
-- [ ] Buat schema LinkVisit
-- [ ] Simpan data klik
-- [ ] Simpan IP address
-- [ ] Simpan user agent
-- [ ] Simpan referer
-- [ ] Total klik
-- [ ] Statistik harian
-- [ ] Statistik mingguan
-- [ ] Statistik bulanan
+- [x] Buat schema LinkVisit
+- [x] Simpan data klik
+- [x] Simpan IP address
+- [x] Simpan user agent
+- [x] Simpan referer
+- [x] Total klik
+- [x] Statistik harian
+- [x] Statistik mingguan
+- [x] Statistik bulanan
 
 Target:
 
