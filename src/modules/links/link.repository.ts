@@ -1,3 +1,4 @@
+import type { Prisma } from "@/generated/prisma/client.js";
 import { prisma } from "@/lib/prisma.js";
 
 export class LinkRepository {
@@ -33,12 +34,27 @@ export class LinkRepository {
     });
   }
 
-  async findManyByUserId(userId: string, page: number, limit: number) {
+  async findManyByUserId(
+    userId: string,
+    page: number,
+    limit: number,
+    search?: string,
+  ) {
     const skip = (page - 1) * limit;
+
+    const whereClause: Prisma.LinkWhereInput = {
+      userId,
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: "insensitive" } },
+          { slug: { contains: search, mode: "insensitive" } },
+        ],
+      }),
+    };
 
     const [links, totalData] = await prisma.$transaction([
       prisma.link.findMany({
-        where: { userId },
+        where: whereClause,
         skip,
         take: limit,
         orderBy: {
@@ -57,8 +73,8 @@ export class LinkRepository {
         },
       }),
 
-      prisma.linkVisit.count({
-        where: { link: { userId } },
+      prisma.link.count({
+        where: whereClause,
       }),
     ]);
 

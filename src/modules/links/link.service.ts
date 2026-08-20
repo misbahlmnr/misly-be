@@ -42,7 +42,7 @@ export class LinkService {
     return linkToResponse(link);
   }
 
-  async getLinks(userId: string, page = 1, limit = 10) {
+  async getLinks(userId: string, page = 1, limit = 10, search?: string) {
     const safePage = Math.max(1, page);
     const safeLimit = Math.max(1, Math.min(100, limit));
 
@@ -50,6 +50,7 @@ export class LinkService {
       userId,
       safePage,
       safeLimit,
+      search,
     );
 
     const totalPages = Math.ceil(totalData / safeLimit);

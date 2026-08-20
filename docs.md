@@ -234,8 +234,8 @@ Target:
 
 ## 15. SEARCH & FILTER
 
-- [ ] Search berdasarkan URL
-- [ ] Search berdasarkan slug
+- [x] Search berdasarkan URL
+- [x] Search berdasarkan slug
 - [ ] Filter berdasarkan tanggal
 - [ ] Sorting
 
