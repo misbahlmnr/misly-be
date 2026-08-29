@@ -10,8 +10,6 @@ export class OverviewController {
   getOverview = async (req: AuthRequest, res: Response) => {
     const userId = req?.user?.userId;
 
-    console.log(userId);
-
     if (!userId) {
       throw new ValidationError("User ID is required");
     }
