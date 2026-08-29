@@ -33,7 +33,7 @@ export class LinkController {
 
   getLinks = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.userId;
-    const search = req.query.search as string;
+    const query = req.query.q as string;
 
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
@@ -46,7 +46,7 @@ export class LinkController {
       userId,
       page,
       limit,
-      search,
+      query,
     );
 
     return sendSuccess({
