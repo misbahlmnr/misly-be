@@ -4,9 +4,11 @@ import { sendSuccess } from "@/utils/api-response.js";
 import type { AuthRequest } from "../auth/auth.types.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
+import { AnalyticService } from "../analytics/analytic.service.js";
 
 export class LinkController {
   private linkService = new LinkService();
+  private analyticService = new AnalyticService();
 
   createLink = async (req: AuthRequest, res: Response) => {
     const { originalUrl, title, customSlug } = req.body;
@@ -132,6 +134,17 @@ export class LinkController {
     }
 
     const link = await this.linkService.getLinkBySlug(slug as string);
+
+    if (!link) {
+      throw new NotFoundError("Link not found");
+    }
+
+    await this.analyticService.create(
+      link.id,
+      req.ip || null,
+      req.headers["user-agent"] || null,
+      req.headers["referer"] || null,
+    );
 
     res.redirect(link.originalUrl);
   };
