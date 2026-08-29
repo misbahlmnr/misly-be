@@ -45,7 +45,7 @@ export class LinkRepository {
     limit: number,
     search?: string,
     status = "active",
-    order = "desc",
+    sort = "desc",
   ) {
     const skip = (page - 1) * limit;
 
@@ -63,9 +63,9 @@ export class LinkRepository {
     };
 
     const orderBy: Prisma.LinkOrderByWithRelationInput =
-      order === "clicks"
+      sort === "clicks"
         ? { LinkVisit: { _count: "desc" } }
-        : { createdAt: order as Prisma.SortOrder };
+        : { createdAt: sort as Prisma.SortOrder };
 
     const [links, totalData] = await prisma.$transaction([
       prisma.link.findMany({

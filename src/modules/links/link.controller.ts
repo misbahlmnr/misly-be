@@ -40,7 +40,7 @@ export class LinkController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const status = (req.query.status as string) || "active";
-    const order = (req.query.order as string) || "desc";
+    const sort = (req.query.sort as string) || "desc";
 
     if (!userId) {
       throw new UnauthorizedError("Unauthorized");
@@ -52,7 +52,7 @@ export class LinkController {
       limit,
       query,
       status,
-      order,
+      sort,
     );
 
     return sendSuccess({

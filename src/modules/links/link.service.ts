@@ -55,7 +55,7 @@ export class LinkService {
     limit = 10,
     search?: string,
     status = "active",
-    order = "desc",
+    sort = "desc",
   ) {
     if (!VALID_STATUSES.includes(status as LinkStatusFilter)) {
       throw new ValidationError(
@@ -63,7 +63,7 @@ export class LinkService {
       );
     }
 
-    if (!VALID_ORDERS.includes(order as LinkOrder)) {
+    if (!VALID_ORDERS.includes(sort as LinkOrder)) {
       throw new ValidationError(
         "Invalid order. Allowed values: desc, asc, clicks",
       );
@@ -78,7 +78,7 @@ export class LinkService {
       safeLimit,
       search,
       status,
-      order,
+      sort,
     );
 
     const totalPages = Math.ceil(totalData / safeLimit);
