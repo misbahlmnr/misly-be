@@ -5,6 +5,13 @@ import { CHARACTERS } from "@/common/constant.js";
 import { linkToResponse } from "./link.mapper.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
+import { ValidationError } from "@/errors/validation-error.js";
+
+const VALID_STATUSES = ["active", "hidden"] as const;
+const VALID_ORDERS = ["desc", "asc", "clicks"] as const;
+
+type LinkStatusFilter = (typeof VALID_STATUSES)[number];
+type LinkOrder = (typeof VALID_ORDERS)[number];
 
 export class LinkService {
   private linkRepository = new LinkRepository();
@@ -42,7 +49,26 @@ export class LinkService {
     return linkToResponse(link);
   }
 
-  async getLinks(userId: string, page = 1, limit = 10, search?: string) {
+  async getLinks(
+    userId: string,
+    page = 1,
+    limit = 10,
+    search?: string,
+    status = "active",
+    order = "desc",
+  ) {
+    if (!VALID_STATUSES.includes(status as LinkStatusFilter)) {
+      throw new ValidationError(
+        "Invalid status. Allowed values: active, hidden",
+      );
+    }
+
+    if (!VALID_ORDERS.includes(order as LinkOrder)) {
+      throw new ValidationError(
+        "Invalid order. Allowed values: desc, asc, clicks",
+      );
+    }
+
     const safePage = Math.max(1, page);
     const safeLimit = Math.max(1, Math.min(100, limit));
 
@@ -51,6 +77,8 @@ export class LinkService {
       safePage,
       safeLimit,
       search,
+      status,
+      order,
     );
 
     const totalPages = Math.ceil(totalData / safeLimit);
@@ -93,6 +121,7 @@ export class LinkService {
     originalUrl: string,
     userId: string,
     title?: string | null,
+    status?: string,
   ) {
     const link = await this.linkRepository.findById(id);
 
@@ -104,10 +133,20 @@ export class LinkService {
       throw new UnauthorizedError("Unauthorized");
     }
 
+    if (
+      status !== undefined &&
+      !VALID_STATUSES.includes(status as LinkStatusFilter)
+    ) {
+      throw new ValidationError(
+        "Invalid status. Allowed values: active, hidden",
+      );
+    }
+
     const updatedLink = await this.linkRepository.update(
       id,
       originalUrl,
       title,
+      status,
     );
 
     return linkToResponse(updatedLink);

@@ -37,6 +37,8 @@ export class LinkController {
 
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
+    const status = (req.query.status as string) || "active";
+    const order = (req.query.order as string) || "desc";
 
     if (!userId) {
       throw new UnauthorizedError("Unauthorized");
@@ -47,6 +49,8 @@ export class LinkController {
       page,
       limit,
       query,
+      status,
+      order,
     );
 
     return sendSuccess({
@@ -84,13 +88,14 @@ export class LinkController {
       throw new UnauthorizedError("Unauthorized");
     }
 
-    const { originalUrl, title } = req.body;
+    const { originalUrl, title, status } = req.body;
 
     const link = await this.linkService.editLink(
       id as string,
       originalUrl,
       userId,
       title,
+      status,
     );
 
     return sendSuccess({

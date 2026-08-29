@@ -1,5 +1,10 @@
-import type { Prisma } from "@/generated/prisma/client.js";
+import { LinkStatus, type Prisma } from "@/generated/prisma/client.js";
 import { prisma } from "@/lib/prisma.js";
+
+const STATUS_MAP: Record<string, LinkStatus> = {
+  active: LinkStatus.ACTIVE,
+  hidden: LinkStatus.HIDDEN,
+};
 
 export class LinkRepository {
   async create(
@@ -39,11 +44,16 @@ export class LinkRepository {
     page: number,
     limit: number,
     search?: string,
+    status = "active",
+    order = "desc",
   ) {
     const skip = (page - 1) * limit;
 
+    const linkStatus = STATUS_MAP[status] ?? LinkStatus.ACTIVE;
+
     const whereClause: Prisma.LinkWhereInput = {
       userId,
+      status: linkStatus,
       ...(search && {
         OR: [
           { title: { contains: search, mode: "insensitive" } },
@@ -52,19 +62,23 @@ export class LinkRepository {
       }),
     };
 
+    const orderBy: Prisma.LinkOrderByWithRelationInput =
+      order === "clicks"
+        ? { LinkVisit: { _count: "desc" } }
+        : { createdAt: order as Prisma.SortOrder };
+
     const [links, totalData] = await prisma.$transaction([
       prisma.link.findMany({
         where: whereClause,
         skip,
         take: limit,
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy,
         select: {
           id: true,
           originalUrl: true,
           slug: true,
           title: true,
+          status: true,
           createdAt: true,
           updatedAt: true,
           _count: {
@@ -81,7 +95,12 @@ export class LinkRepository {
     return { links, totalData };
   }
 
-  async update(id: string, originalUrl: string, title?: string | null) {
+  async update(
+    id: string,
+    originalUrl: string,
+    title?: string | null,
+    status?: string,
+  ) {
     return prisma.link.update({
       where: {
         id,
@@ -89,6 +108,7 @@ export class LinkRepository {
       data: {
         originalUrl,
         ...(title !== undefined ? { title } : {}),
+        ...(status !== undefined ? { status: STATUS_MAP[status] } : {}),
       },
     });
   }
