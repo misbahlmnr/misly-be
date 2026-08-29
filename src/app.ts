@@ -3,6 +3,7 @@ import userRoutes from "./modules/users/user.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import linkRoutes from "./modules/links/link.routes.js";
 import analyticRoutes from "./modules/analytics/analytic.routes.js";
+import overviewRoutes from "./modules/overview/overview.route.js";
 import {
   errorHandlerMiddleware,
   notFoundMiddleware,
@@ -56,6 +57,7 @@ api.use("/auth", authRoutes);
 api.use("/users", userRoutes);
 api.use("/links", linkRoutes);
 api.use("/analytics", analyticRoutes);
+api.use("/dashboard/overview", overviewRoutes);
 
 app.use("/api", api);
 

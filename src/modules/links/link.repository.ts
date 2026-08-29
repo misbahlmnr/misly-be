@@ -120,4 +120,22 @@ export class LinkRepository {
       },
     });
   }
+
+  async countByUserId(userId: string) {
+    return prisma.link.count({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  async findRecentByUserId(userId: string) {
+    return prisma.link.findMany({
+      where: {
+        userId,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+    });
+  }
 }

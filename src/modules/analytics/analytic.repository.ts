@@ -1,6 +1,14 @@
 import { prisma } from "@/lib/prisma.js";
 
 export class AnalyticRepository {
+  async countByUserId(userId: string) {
+    return prisma.linkVisit.count({
+      where: {
+        link: { userId },
+      },
+    });
+  }
+
   async create(
     linkId: string,
     ipAddress: string | null,
