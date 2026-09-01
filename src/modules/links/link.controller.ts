@@ -5,6 +5,7 @@ import type { AuthRequest } from "../auth/auth.types.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
 import { AnalyticService } from "../analytics/analytic.service.js";
+import type { LinkStatus } from "@/generated/prisma/enums.js";
 
 export class LinkController {
   private linkService = new LinkService();
@@ -104,6 +105,29 @@ export class LinkController {
       res,
       data: link,
       message: "Link edited successfully",
+      statusCode: 200,
+    });
+  };
+
+  updateLinkStatus = async (req: AuthRequest, res: Response) => {
+    const { id } = req.params;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { status } = req.body;
+    const link = await this.linkService.updateLinkStatus(
+      id as string,
+      userId,
+      status,
+    );
+
+    return sendSuccess({
+      res,
+      data: link,
+      message: "Link status updated successfully",
       statusCode: 200,
     });
   };

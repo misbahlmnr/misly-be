@@ -9,6 +9,7 @@ router.get("/", authMiddleware, linkController.getLinks);
 router.post("/", authMiddleware, linkController.createLink);
 router.get("/:id", authMiddleware, linkController.getLinkById);
 router.put("/:id", authMiddleware, linkController.editLink);
+router.patch("/:id/status", authMiddleware, linkController.updateLinkStatus);
 router.delete("/:id", authMiddleware, linkController.deleteLink);
 
 export default router;

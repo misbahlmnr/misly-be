@@ -6,6 +6,7 @@ import { linkToResponse } from "./link.mapper.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 import { ValidationError } from "@/errors/validation-error.js";
+import type { LinkStatus } from "@/generated/prisma/enums.js";
 
 const VALID_STATUSES = ["active", "hidden"] as const;
 const VALID_ORDERS = ["desc", "asc", "clicks"] as const;
@@ -148,6 +149,31 @@ export class LinkService {
       title,
       status,
     );
+
+    return linkToResponse(updatedLink);
+  }
+
+  async updateLinkStatus(id: string, userId: string, status: string) {
+    const link = await this.linkRepository.findById(id);
+
+    if (!link) {
+      throw new NotFoundError("Link not found");
+    }
+
+    if (link.userId !== userId) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    if (
+      status !== undefined &&
+      !VALID_STATUSES.includes(status as LinkStatusFilter)
+    ) {
+      throw new ValidationError(
+        "Invalid status. Allowed values: active, hidden",
+      );
+    }
+
+    const updatedLink = await this.linkRepository.updateStatus(id, status);
 
     return linkToResponse(updatedLink);
   }

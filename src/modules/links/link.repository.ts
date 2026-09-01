@@ -113,6 +113,15 @@ export class LinkRepository {
     });
   }
 
+  async updateStatus(id: string, status: string) {
+    return prisma.link.update({
+      where: {
+        id,
+      },
+      data: { status: STATUS_MAP[status] ?? LinkStatus.ACTIVE },
+    });
+  }
+
   async delete(id: string) {
     return prisma.link.delete({
       where: {
