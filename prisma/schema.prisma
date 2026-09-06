@@ -20,6 +20,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   links Link[]
+  domains Domain[]
 
   @@map("users")
 }
@@ -29,6 +30,9 @@ model Link {
 
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  domainId String
+  domains Domain @relation(fields: [domainId], references: [id], onDelete: Cascade)
 
   title String?
   originalUrl String
@@ -60,4 +64,35 @@ model LinkVisit {
   @@index([linkId, visitedAt])
 
   @@map("link_visits")
+}
+
+enum DomainStatus {
+  PENDING
+  VERIFIED
+  FAILED
+}
+
+enum DnsRecordType {
+  CNAME
+  A
+}
+
+model Domain {
+  id String @id @default(cuid())
+  
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  domainName String @unique
+  dnsTarget String?
+  dnsRecordType DnsRecordType @default(CNAME)
+  status DomainStatus @default(PENDING)
+  verifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  links Link[]
+
+  @@map("domains")
 }
