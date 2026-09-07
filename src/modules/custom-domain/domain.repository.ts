@@ -60,6 +60,17 @@ export class DomainRepository {
     });
   }
 
+  async updateStatus(domainId: string, status: DomainStatus) {
+    return await prisma.domain.update({
+      where: {
+        id: domainId,
+      },
+      data: {
+        status: status.toUpperCase() as DomainStatus,
+      },
+    });
+  }
+
   async deleteDomain(domainId: string) {
     return await prisma.domain.delete({
       where: {

@@ -1,3 +1,4 @@
+import type { DomainStatus } from "@/generated/prisma/enums.js";
 import { DomainRepository } from "./domain.repository.js";
 
 export class DomainService {
@@ -27,6 +28,11 @@ export class DomainService {
     return domain;
   }
 
+  async getDomainById(domainId: string) {
+    const domain = await this.domainRepository.getDomainById(domainId);
+    return domain;
+  }
+
   async updateDomain(
     domainId: string,
     domainName: string,
@@ -42,6 +48,11 @@ export class DomainService {
       status,
       null,
     );
+    return domain;
+  }
+
+  async updateDomainStatus(domainId: string, status: DomainStatus) {
+    const domain = await this.domainRepository.updateStatus(domainId, status);
     return domain;
   }
 
