@@ -1,15 +1,14 @@
-import { CHARACTERS } from "@/common/constant.js";
+import { CHARACTERS, MASTER_DOMAIN } from "@/common/constant.js";
 import { ConflictError } from "@/errors/conflict-error.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
 import type { Prisma } from "@/generated/prisma/client.js";
 import { customAlphabet } from "nanoid";
 import { DomainService } from "../custom-domain/domain.service.js";
 import { LinkRepository } from "../links/link.repository.js";
+import { buildShortUrl } from "../links/link.mapper.js";
 import { qrCodeToResponse } from "./qr-code.mapper.js";
 import { QrCodeRepository } from "./qr-code.repository.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
-
-const MASTER_DOMAIN = "misly.link";
 
 export class QrCodeService {
   private qrCodeRepository = new QrCodeRepository();
@@ -61,7 +60,7 @@ export class QrCodeService {
       );
     }
 
-    const shortUrl = `https://${masterDomain.domainName}/${link.slug}`;
+    const shortUrl = buildShortUrl(masterDomain.domainName, link.slug);
 
     const qrCode = await this.qrCodeRepository.create({
       userId,

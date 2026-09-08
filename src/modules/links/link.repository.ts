@@ -6,22 +6,45 @@ const STATUS_MAP: Record<string, LinkStatus> = {
   hidden: LinkStatus.HIDDEN,
 };
 
+const domainInclude = {
+  domains: {
+    select: {
+      domainName: true,
+    },
+  },
+} as const;
+
+const linkListSelect = {
+  id: true,
+  originalUrl: true,
+  slug: true,
+  title: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+  ...domainInclude,
+  _count: {
+    select: { LinkVisit: true },
+  },
+} as const;
+
 export class LinkRepository {
   async create(
     originalUrl: string,
     slug: string,
     userId: string,
-    title?: string | null,
-    domainId?: string,
+    title: string | null | undefined,
+    domainId: string,
   ) {
     return prisma.link.create({
       data: {
         originalUrl,
         slug,
         userId,
+        domainId,
         ...(title !== undefined ? { title } : {}),
-        ...(domainId !== undefined ? { domainId } : {}),
       },
+      include: domainInclude,
     });
   }
 
@@ -30,6 +53,7 @@ export class LinkRepository {
       where: {
         id,
       },
+      include: domainInclude,
     });
   }
 
@@ -38,6 +62,7 @@ export class LinkRepository {
       where: {
         slug,
       },
+      include: domainInclude,
     });
   }
 
@@ -49,6 +74,7 @@ export class LinkRepository {
           slug,
         },
       },
+      include: domainInclude,
     });
   }
 
@@ -63,6 +89,7 @@ export class LinkRepository {
         originalUrl,
         domainId,
       },
+      include: domainInclude,
     });
   }
 
@@ -100,18 +127,7 @@ export class LinkRepository {
         skip,
         take: limit,
         orderBy,
-        select: {
-          id: true,
-          originalUrl: true,
-          slug: true,
-          title: true,
-          status: true,
-          createdAt: true,
-          updatedAt: true,
-          _count: {
-            select: { LinkVisit: true },
-          },
-        },
+        select: linkListSelect,
       }),
 
       prisma.link.count({
@@ -137,6 +153,7 @@ export class LinkRepository {
         ...(title !== undefined ? { title } : {}),
         ...(status !== undefined ? { status: STATUS_MAP[status] } : {}),
       },
+      include: domainInclude,
     });
   }
 
@@ -146,6 +163,7 @@ export class LinkRepository {
         id,
       },
       data: { status: STATUS_MAP[status] ?? LinkStatus.ACTIVE },
+      include: domainInclude,
     });
   }
 
@@ -172,6 +190,7 @@ export class LinkRepository {
       },
       orderBy: { createdAt: "desc" },
       take: 3,
+      select: linkListSelect,
     });
   }
 }

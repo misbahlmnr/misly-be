@@ -5,7 +5,7 @@ import type { AuthRequest } from "../auth/auth.types.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
 import { AnalyticService } from "../analytics/analytic.service.js";
-import type { LinkStatus } from "@/generated/prisma/enums.js";
+import { LinkStatus } from "@/generated/prisma/client.js";
 
 export class LinkController {
   private linkService = new LinkService();
@@ -151,15 +151,17 @@ export class LinkController {
   };
 
   redirectBySlug = async (req: Request, res: Response) => {
-    const { slug } = req.params;
+    const slug = Array.isArray(req.params.slug)
+      ? req.params.slug[0]
+      : req.params.slug;
 
     if (!slug) {
       throw new NotFoundError("Slug is required");
     }
 
-    const link = await this.linkService.getLinkBySlug(slug as string);
+    const link = await this.linkService.getLinkForRedirect(req.hostname, slug);
 
-    if (!link) {
+    if (link.status === LinkStatus.HIDDEN) {
       throw new NotFoundError("Link not found");
     }
 
@@ -170,6 +172,6 @@ export class LinkController {
       req.headers["referer"] || null,
     );
 
-    res.redirect(link.originalUrl);
+    res.redirect(302, link.originalUrl);
   };
 }
