@@ -1,6 +1,13 @@
-import { LinkStatus, type Link } from "@/generated/prisma/client.js";
+import { LinkStatus } from "@/generated/prisma/client.js";
 
-type LinkWithCount = Link & {
+type LinkWithCount = {
+  id: string;
+  title: string | null;
+  originalUrl: string;
+  slug: string;
+  status: LinkStatus;
+  createdAt: Date;
+  updatedAt: Date;
   _count?: {
     LinkVisit: number;
   };

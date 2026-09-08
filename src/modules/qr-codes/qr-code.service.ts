@@ -95,10 +95,10 @@ export class QrCodeService {
     }
 
     const updatedQrCode = await this.qrCodeRepository.update(qrCodeId, {
-      title: title ?? qrCode.title,
-      destinationUrl: destinationUrl ?? qrCode.destinationUrl,
-      styles: styles ?? qrCode.styles,
-      logoUrl: logoUrl ?? qrCode.logoUrl,
+      ...(title !== undefined ? { title } : {}),
+      ...(destinationUrl ? { destinationUrl } : {}),
+      ...(styles !== undefined ? { styles } : {}),
+      ...(logoUrl !== undefined ? { logoUrl } : {}),
     });
     return qrCodeToResponse(updatedQrCode);
   }

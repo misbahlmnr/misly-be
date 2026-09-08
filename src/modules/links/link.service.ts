@@ -85,7 +85,7 @@ export class LinkService {
     const totalPages = Math.ceil(totalData / safeLimit);
 
     return {
-      data: links.map((link) => linkToResponse({ ...link, userId })),
+      data: links.map((link) => linkToResponse(link)),
       meta: {
         page: safePage,
         limit: safeLimit,

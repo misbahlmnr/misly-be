@@ -41,13 +41,15 @@ export class QrCodeRepository {
     id: string,
     data: {
       title?: string | null;
-      destinationUrl?: string | null;
+      destinationUrl?: string;
       styles?: Prisma.InputJsonValue | null;
       logoUrl?: string | null;
     },
   ) {
     return prisma.qrCode.update({
-      where: { id },
+      where: {
+        id,
+      },
       data: {
         ...(data.title !== undefined ? { title: data.title } : {}),
         ...(data.styles !== undefined
