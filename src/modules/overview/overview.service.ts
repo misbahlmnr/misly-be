@@ -1,4 +1,5 @@
 import { AnalyticRepository } from "../analytics/analytic.repository.js";
+import { linkToResponse } from "../links/link.mapper.js";
 import { LinkRepository } from "../links/link.repository.js";
 
 export class OverviewService {
@@ -18,7 +19,7 @@ export class OverviewService {
         totalClicks,
         totalQrCodes: 0,
       },
-      recentLinks,
+      recentLinks: recentLinks.map((link) => linkToResponse(link)),
     };
   }
 }
