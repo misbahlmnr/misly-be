@@ -12,6 +12,7 @@ export class LinkRepository {
     slug: string,
     userId: string,
     title?: string | null,
+    domainId?: string,
   ) {
     return prisma.link.create({
       data: {
@@ -19,6 +20,7 @@ export class LinkRepository {
         slug,
         userId,
         ...(title !== undefined ? { title } : {}),
+        ...(domainId !== undefined ? { domainId } : {}),
       },
     });
   }
@@ -32,9 +34,34 @@ export class LinkRepository {
   }
 
   async findBySlug(slug: string) {
-    return prisma.link.findUnique({
+    return prisma.link.findFirst({
       where: {
         slug,
+      },
+    });
+  }
+
+  async findByDomainAndSlug(domainId: string, slug: string) {
+    return prisma.link.findUnique({
+      where: {
+        domainId_slug: {
+          domainId,
+          slug,
+        },
+      },
+    });
+  }
+
+  async findByUserUrlAndDomain(
+    userId: string,
+    originalUrl: string,
+    domainId: string,
+  ) {
+    return prisma.link.findFirst({
+      where: {
+        userId,
+        originalUrl,
+        domainId,
       },
     });
   }

@@ -21,6 +21,7 @@ model User {
 
   links Link[]
   domains Domain[]
+  QrCode QrCode[]
 
   @@map("users")
 }
@@ -36,13 +37,15 @@ model Link {
 
   title String?
   originalUrl String
-  slug String @unique
+  slug String
   status LinkStatus @default(ACTIVE)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   LinkVisit LinkVisit[]
-
+  QrCode QrCode[]
+  
+  @@unique([domainId, slug])
   @@map("links")
 }
 
@@ -95,4 +98,24 @@ model Domain {
   links Link[]
 
   @@map("domains")
+}
+
+model QrCode {
+  id String @id @default(cuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  linkId String
+  link Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  title String?
+  destinationUrl String
+  styles Json? 
+  logoUrl String? 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("qr_codes")
 }

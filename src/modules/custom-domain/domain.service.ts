@@ -10,6 +10,11 @@ export class DomainService {
     return domains;
   }
 
+  async getDomainByName(domainName: string) {
+    const domain = await this.domainRepository.getDomainByName(domainName);
+    return domain;
+  }
+
   async addDomain(
     userId: string,
     domainName: string,

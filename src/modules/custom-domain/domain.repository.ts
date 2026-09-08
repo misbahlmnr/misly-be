@@ -18,6 +18,14 @@ export class DomainRepository {
     });
   }
 
+  async getDomainByName(domainName: string) {
+    return await prisma.domain.findUnique({
+      where: {
+        domainName,
+      },
+    });
+  }
+
   async addDomain(
     userId: string,
     domainName: string,

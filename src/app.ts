@@ -5,6 +5,7 @@ import linkRoutes from "./modules/links/link.routes.js";
 import analyticRoutes from "./modules/analytics/analytic.routes.js";
 import overviewRoutes from "./modules/overview/overview.route.js";
 import domainRoutes from "./modules/custom-domain/domain.route.js";
+import qrCodeRoutes from "./modules/qr-codes/qr-code.route.js";
 import {
   errorHandlerMiddleware,
   notFoundMiddleware,
@@ -60,6 +61,7 @@ api.use("/links", linkRoutes);
 api.use("/analytics", analyticRoutes);
 api.use("/dashboard/overview", overviewRoutes);
 api.use("/domains", domainRoutes);
+api.use("/qr-codes", qrCodeRoutes);
 
 app.use("/api", api);
 
