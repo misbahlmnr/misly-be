@@ -73,7 +73,7 @@ export class LinkController {
       throw new UnauthorizedError("Unauthorized");
     }
 
-    const link = await this.linkService.getLinkById(id as string);
+    const link = await this.linkService.getLinkById(id as string, userId);
 
     return sendSuccess({
       res,

@@ -1,9 +1,23 @@
+import { NotFoundError } from "@/errors/not-found-error.js";
 import { ValidationError } from "@/errors/validation-error.js";
+import { LinkRepository } from "../links/link.repository.js";
 import { AnalyticRepository } from "./analytic.repository.js";
-import { subDays, format, subWeeks, subMonths } from "date-fns";
+import {
+  buildBrowsers,
+  buildDevices,
+  buildSeries,
+  buildSources,
+  comparisonLabel,
+  countUniqueVisitors,
+  isAnalyticRange,
+  normalizeAnalyticRange,
+  percentChange,
+  resolveRangeWindow,
+} from "./analytic.utils.js";
 
 export class AnalyticService {
   private analyticRepository = new AnalyticRepository();
+  private linkRepository = new LinkRepository();
 
   async create(
     linkId: string,
@@ -23,47 +37,56 @@ export class AnalyticService {
     return this.analyticRepository.countByLinkId(linkId);
   }
 
-  async getStats(linkId: string, period: string) {
-    const now = new Date();
-    let startDate: Date;
-    let formatKey: (date: Date) => string;
+  async getStats(linkId: string, userId: string, rangeInput: string) {
+    const range = normalizeAnalyticRange(rangeInput);
 
-    switch (period) {
-      case "daily":
-        startDate = subDays(now, 7);
-        formatKey = (date: Date) => format(date, "yyyy-MM-dd");
-        break;
-
-      case "weekly":
-        startDate = subWeeks(now, 4);
-        formatKey = (date: Date) => format(date, "yyyy-ww");
-        break;
-
-      case "monthly":
-        startDate = subMonths(now, 12);
-        formatKey = (date: Date) => format(date, "yyyy-MM");
-        break;
-
-      default:
-        throw new ValidationError("Invalid period");
+    if (!isAnalyticRange(range)) {
+      throw new ValidationError("Invalid range. Allowed values: 7d, 30d, all");
     }
 
+    const link = await this.linkRepository.findById(linkId);
+
+    if (!link || link.userId !== userId) {
+      throw new NotFoundError("Link not found");
+    }
+
+    const window = resolveRangeWindow(range);
     const visits = await this.analyticRepository.getVisitsFromDate(
       linkId,
-      startDate,
+      window.previousStart,
     );
 
-    const statsMap = visits.reduce<Record<string, number>>((acc, curr) => {
-      const key = formatKey(curr.visitedAt);
-      acc[key] = (acc[key] || 0) + 1;
-      return acc;
-    }, {});
+    const currentVisits = visits.filter(
+      (visit) => visit.visitedAt >= window.start,
+    );
+    const previousVisits = visits.filter(
+      (visit) => visit.visitedAt < window.start,
+    );
 
-    const stats = Object.entries(statsMap).map(([date, count]) => ({
-      date,
-      count,
-    }));
+    const totalClicks = currentVisits.length;
+    const uniqueVisitors = countUniqueVisitors(currentVisits);
+    const sources = buildSources(currentVisits, totalClicks);
+    const topSource = sources[0];
 
-    return stats;
+    return {
+      range,
+      comparisonLabel: comparisonLabel(range),
+      totalClicks,
+      uniqueVisitors,
+      clicksChange: percentChange(totalClicks, previousVisits.length),
+      visitorsChange: percentChange(
+        uniqueVisitors,
+        countUniqueVisitors(previousVisits),
+      ),
+      topCountry: { name: "", share: 0 },
+      topReferrer: topSource
+        ? { name: topSource.name, share: topSource.share }
+        : { name: "", share: 0 },
+      locations: [],
+      sources,
+      devices: buildDevices(currentVisits, totalClicks),
+      browsers: buildBrowsers(currentVisits, totalClicks),
+      series: buildSeries(currentVisits, window),
+    };
   }
 }

@@ -42,6 +42,10 @@ export class AnalyticRepository {
         },
       },
       select: {
+        id: true,
+        ipAddress: true,
+        userAgent: true,
+        referrer: true,
         visitedAt: true,
       },
       orderBy: {

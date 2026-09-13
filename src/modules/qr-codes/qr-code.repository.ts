@@ -2,6 +2,12 @@ import { Prisma } from "@/generated/prisma/client.js";
 import { prisma } from "@/lib/prisma.js";
 
 export class QrCodeRepository {
+  async countByUserId(userId: string) {
+    return prisma.qrCode.count({
+      where: { userId },
+    });
+  }
+
   async findById(id: string) {
     return prisma.qrCode.findUnique({
       where: { id },

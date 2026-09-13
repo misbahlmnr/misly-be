@@ -53,7 +53,12 @@ export class LinkRepository {
       where: {
         id,
       },
-      include: domainInclude,
+      include: {
+        ...domainInclude,
+        _count: {
+          select: { LinkVisit: true },
+        },
+      },
     });
   }
 
@@ -63,6 +68,16 @@ export class LinkRepository {
         slug,
       },
       include: domainInclude,
+    });
+  }
+
+  async findByUserIdAndSlug(userId: string, slug: string) {
+    return prisma.link.findFirst({
+      where: {
+        userId,
+        slug,
+      },
+      select: linkListSelect,
     });
   }
 

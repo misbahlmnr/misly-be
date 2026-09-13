@@ -122,14 +122,20 @@ export class LinkService {
     };
   }
 
-  async getLinkById(id: string) {
-    const link = await this.linkRepository.findById(id);
+  async getLinkById(id: string, userId: string) {
+    const byId = await this.linkRepository.findById(id);
 
-    if (!link) {
+    if (byId && byId.userId === userId) {
+      return linkToResponse(byId);
+    }
+
+    const bySlug = await this.linkRepository.findByUserIdAndSlug(userId, id);
+
+    if (!bySlug) {
       throw new NotFoundError("Link not found");
     }
 
-    return linkToResponse(link);
+    return linkToResponse(bySlug);
   }
 
   async getLinkForRedirect(host: string | undefined, slug: string) {
