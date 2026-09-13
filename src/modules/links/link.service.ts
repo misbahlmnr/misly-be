@@ -1,12 +1,12 @@
+import { CHARACTERS, MASTER_DOMAIN } from "@/common/constant.js";
 import { ConflictError } from "@/errors/conflict-error.js";
-import { LinkRepository } from "./link.repository.js";
-import { customAlphabet } from "nanoid";
-import { CHARACTERS } from "@/common/constant.js";
-import { linkToResponse } from "./link.mapper.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
 import { ValidationError } from "@/errors/validation-error.js";
-import type { LinkStatus } from "@/generated/prisma/enums.js";
+import { customAlphabet } from "nanoid";
+import { DomainService } from "../custom-domain/domain.service.js";
+import { linkToResponse } from "./link.mapper.js";
+import { LinkRepository } from "./link.repository.js";
 
 const VALID_STATUSES = ["active", "hidden"] as const;
 const VALID_ORDERS = ["desc", "asc", "clicks"] as const;
@@ -14,8 +14,34 @@ const VALID_ORDERS = ["desc", "asc", "clicks"] as const;
 type LinkStatusFilter = (typeof VALID_STATUSES)[number];
 type LinkOrder = (typeof VALID_ORDERS)[number];
 
+function normalizeRequestHost(host: string | undefined) {
+  if (!host) return "";
+
+  const hostname = host.split(",")[0]?.trim() ?? "";
+
+  return hostname
+    .replace(/:\d+$/, "")
+    .replace(/^www\./i, "")
+    .toLowerCase();
+}
+
+function isLocalHost(hostname: string) {
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
 export class LinkService {
   private linkRepository = new LinkRepository();
+  private domainService = new DomainService();
+
+  private async getMasterDomain() {
+    const masterDomain = await this.domainService.getDomainByName(MASTER_DOMAIN);
+
+    if (!masterDomain) {
+      throw new NotFoundError("Master domain not found");
+    }
+
+    return masterDomain;
+  }
 
   async createLink(
     originalUrl: string,
@@ -23,18 +49,16 @@ export class LinkService {
     title?: string | null,
     customSlug?: string | null | undefined,
   ) {
+    const masterDomain = await this.getMasterDomain();
     // TODO: Improve slug generation for production.
     // Currently we generate a random slug and rely on the database's unique constraint.
     // In the future, implement a retry mechanism to handle the rare case of a collision.
-    let slug;
+    const slug = customSlug || customAlphabet(CHARACTERS, 6)();
 
-    if (!customSlug) {
-      slug = customAlphabet(CHARACTERS, 6)();
-    } else {
-      slug = customSlug;
-    }
-
-    const existingLink = await this.linkRepository.findBySlug(slug);
+    const existingLink = await this.linkRepository.findByDomainAndSlug(
+      masterDomain.id,
+      slug,
+    );
 
     if (existingLink) {
       throw new ConflictError("Slug already in use");
@@ -45,6 +69,7 @@ export class LinkService {
       slug,
       userId,
       title,
+      masterDomain.id,
     );
 
     return linkToResponse(link);
@@ -107,14 +132,24 @@ export class LinkService {
     return linkToResponse(link);
   }
 
-  async getLinkBySlug(slug: string) {
-    const link = await this.linkRepository.findBySlug(slug);
+  async getLinkForRedirect(host: string | undefined, slug: string) {
+    const hostname = normalizeRequestHost(host);
+    const domain =
+      hostname && !isLocalHost(hostname)
+        ? await this.domainService.getDomainByName(hostname)
+        : null;
+    const resolvedDomain = domain ?? (await this.getMasterDomain());
+
+    const link = await this.linkRepository.findByDomainAndSlug(
+      resolvedDomain.id,
+      slug,
+    );
 
     if (!link) {
       throw new NotFoundError("Link not found");
     }
 
-    return linkToResponse(link);
+    return link;
   }
 
   async editLink(
