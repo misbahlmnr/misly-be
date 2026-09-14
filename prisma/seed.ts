@@ -17,14 +17,14 @@ async function main() {
 
   // seed default domain
   const defaultDomain = await prisma.domain.upsert({
-    where: { domainName: "misly.link" },
+    where: { domainName: "misly-link.vercel.app" },
     update: {},
     create: {
-      domainName: "misly.link",
+      domainName: "misly-link.vercel.app",
       userId: defaultUser.id,
       status: DomainStatus.VERIFIED, // Pastikan enum ini ada di schema
       dnsRecordType: DnsRecordType.CNAME, // Pastikan enum ini ada di schema
-      dnsTarget: "cname.misly.link",
+      dnsTarget: "cname.misly-link.vercel.app",
       verifiedAt: new Date(),
     },
   });

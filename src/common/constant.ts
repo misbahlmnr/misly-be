@@ -1,4 +1,4 @@
 export const CHARACTERS =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-export const MASTER_DOMAIN = "misly.link";
+export const MASTER_DOMAIN = "misly-link.vercel.app";
