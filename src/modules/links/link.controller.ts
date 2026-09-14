@@ -150,7 +150,7 @@ export class LinkController {
     });
   };
 
-  redirectBySlug = async (req: Request, res: Response) => {
+  resolveBySlug = async (req: Request, res: Response) => {
     const slug = Array.isArray(req.params.slug)
       ? req.params.slug[0]
       : req.params.slug;
@@ -159,19 +159,29 @@ export class LinkController {
       throw new NotFoundError("Slug is required");
     }
 
-    const link = await this.linkService.getLinkForRedirect(req.hostname, slug);
+    const { host, ip, isPrefetch } =
+      this.linkService.getAdditionalReqContext(req);
+
+    const link = await this.linkService.getLinkForRedirect(host, slug);
 
     if (link.status === LinkStatus.HIDDEN) {
       throw new NotFoundError("Link not found");
     }
 
-    await this.analyticService.create(
-      link.id,
-      req.ip || null,
-      req.headers["user-agent"] || null,
-      req.headers["referer"] || null,
-    );
+    if (!isPrefetch) {
+      await this.analyticService.create(
+        link.id,
+        ip,
+        req.headers["user-agent"] || null,
+        req.headers["referer"] || null,
+      );
+    }
 
-    res.redirect(302, link.originalUrl);
+    return sendSuccess({
+      res,
+      data: { originalUrl: link.originalUrl },
+      message: "Link resolved successfully",
+      statusCode: 200,
+    });
   };
 }

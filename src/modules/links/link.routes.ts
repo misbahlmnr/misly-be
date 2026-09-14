@@ -7,6 +7,7 @@ const router = Router();
 
 router.get("/", authMiddleware, linkController.getLinks);
 router.post("/", authMiddleware, linkController.createLink);
+router.get("/resolve/:slug", linkController.resolveBySlug);
 router.get("/:id", authMiddleware, linkController.getLinkById);
 router.put("/:id", authMiddleware, linkController.editLink);
 router.patch("/:id/status", authMiddleware, linkController.updateLinkStatus);

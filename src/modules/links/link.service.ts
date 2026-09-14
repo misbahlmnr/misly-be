@@ -1,4 +1,8 @@
-import { CHARACTERS, MASTER_DOMAIN } from "@/common/constant.js";
+import {
+  CHARACTERS,
+  MASTER_DOMAIN,
+  RESERVED_SLUGS,
+} from "@/common/constant.js";
 import { ConflictError } from "@/errors/conflict-error.js";
 import { NotFoundError } from "@/errors/not-found-error.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
@@ -7,6 +11,7 @@ import { customAlphabet } from "nanoid";
 import { DomainService } from "../custom-domain/domain.service.js";
 import { linkToResponse } from "./link.mapper.js";
 import { LinkRepository } from "./link.repository.js";
+import type { Request } from "express";
 
 const VALID_STATUSES = ["active", "hidden"] as const;
 const VALID_ORDERS = ["desc", "asc", "clicks"] as const;
@@ -34,7 +39,8 @@ export class LinkService {
   private domainService = new DomainService();
 
   private async getMasterDomain() {
-    const masterDomain = await this.domainService.getDomainByName(MASTER_DOMAIN);
+    const masterDomain =
+      await this.domainService.getDomainByName(MASTER_DOMAIN);
 
     if (!masterDomain) {
       throw new NotFoundError("Master domain not found");
@@ -54,6 +60,10 @@ export class LinkService {
     // Currently we generate a random slug and rely on the database's unique constraint.
     // In the future, implement a retry mechanism to handle the rare case of a collision.
     const slug = customSlug || customAlphabet(CHARACTERS, 6)();
+
+    if (RESERVED_SLUGS.has(slug.toLowerCase())) {
+      throw new ValidationError("Slug is reserved");
+    }
 
     const existingLink = await this.linkRepository.findByDomainAndSlug(
       masterDomain.id,
@@ -231,5 +241,22 @@ export class LinkService {
     }
 
     await this.linkRepository.delete(id);
+  }
+
+  getAdditionalReqContext(req: Request) {
+    const host =
+      (typeof req.query.host === "string" && req.query.host) ||
+      req.get("x-forwarded-host") ||
+      req.hostname;
+
+    const forwarded = req.get("x-forwarded-for");
+    const ip = forwarded?.split(",")[0]?.trim() || req.ip || null;
+
+    const isPrefetch =
+      req.get("next-router-prefetch") === "1" ||
+      (req.get("purpose") ?? "").includes("prefetch") ||
+      (req.get("sec-purpose") ?? "").includes("prefetch");
+
+    return { host, ip, isPrefetch };
   }
 }
