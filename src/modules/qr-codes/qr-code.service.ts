@@ -9,6 +9,7 @@ import { buildShortUrl } from "../links/link.mapper.js";
 import { qrCodeToResponse } from "./qr-code.mapper.js";
 import { QrCodeRepository } from "./qr-code.repository.js";
 import { UnauthorizedError } from "@/errors/unauthorize-error.js";
+import type { Request } from "express";
 
 export class QrCodeService {
   private qrCodeRepository = new QrCodeRepository();
@@ -18,6 +19,14 @@ export class QrCodeService {
   async getQrCodes(userId: string) {
     const qrCodes = await this.qrCodeRepository.findManyByUserId(userId);
     return qrCodes.map((qrCode) => qrCodeToResponse(qrCode));
+  }
+
+  async getQrCodeById(qrCodeId: string) {
+    const qrCode = await this.qrCodeRepository.findById(qrCodeId);
+    if (!qrCode) {
+      throw new NotFoundError("QR code not found");
+    }
+    return qrCodeToResponse(qrCode);
   }
 
   async createQrCode(
@@ -113,5 +122,35 @@ export class QrCodeService {
       );
     }
     await this.qrCodeRepository.delete(qrCodeId);
+  }
+
+  getAdditionalReqContext(req: Request) {
+    const host =
+      (typeof req.query.host === "string" && req.query.host) ||
+      req.get("x-forwarded-host") ||
+      req.hostname;
+
+    const forwarded = req.get("x-forwarded-for");
+    const ip = forwarded?.split(",")[0]?.trim() || req.ip || null;
+
+    const isPrefetch =
+      req.get("next-router-prefetch") === "1" ||
+      (req.get("purpose") ?? "").includes("prefetch") ||
+      (req.get("sec-purpose") ?? "").includes("prefetch");
+
+    return { host, ip, isPrefetch };
+  }
+
+  async createScanAnalytic(
+    qrCodeId: string,
+    ip: string | null,
+    userAgent: string | null,
+    referrer: string | null,
+  ) {
+    return this.qrCodeRepository.createScanAnalytic(qrCodeId, {
+      ip,
+      userAgent,
+      referrer,
+    });
   }
 }

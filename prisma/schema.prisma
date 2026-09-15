@@ -117,5 +117,27 @@ model QrCode {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  scans QrScan[]
+
   @@map("qr_codes")
+}
+
+model QrScan {
+  id String @id @default(cuid())
+
+  qrCodeId String
+  qrCode QrCode @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+
+  ipAddress String?
+  userAgent String?
+  referrer String?
+  scannedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([qrCodeId])
+  @@index([qrCodeId, scannedAt])
+  
+  @@map("qr_scans")
 }

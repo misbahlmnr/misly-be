@@ -11,6 +11,9 @@ export class QrCodeRepository {
   async findById(id: string) {
     return prisma.qrCode.findUnique({
       where: { id },
+      include: {
+        link: true,
+      },
     });
   }
 
@@ -72,6 +75,24 @@ export class QrCodeRepository {
   async delete(id: string) {
     return prisma.qrCode.delete({
       where: { id },
+    });
+  }
+
+  async createScanAnalytic(
+    qrCodeId: string,
+    data: {
+      ip: string | null;
+      userAgent: string | null;
+      referrer: string | null;
+    },
+  ) {
+    return prisma.qrScan.create({
+      data: {
+        qrCodeId,
+        ipAddress: data.ip,
+        userAgent: data.userAgent,
+        referrer: data.referrer,
+      },
     });
   }
 }

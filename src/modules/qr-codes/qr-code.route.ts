@@ -7,6 +7,7 @@ const qrCodeController = new QrCodeController();
 
 router.get("/", authMiddleware, qrCodeController.getQrCodes);
 router.post("/", authMiddleware, qrCodeController.createQrCode);
+router.get("/resolve/:id", qrCodeController.resolveQrCode);
 router.put("/:id", authMiddleware, qrCodeController.updateQrCode);
 router.delete("/:id", authMiddleware, qrCodeController.deleteQrCode);
 

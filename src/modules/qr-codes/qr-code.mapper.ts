@@ -1,4 +1,4 @@
-import type { QrCode } from "@/generated/prisma/client.js";
+import type { Link, QrCode } from "@/generated/prisma/client.js";
 
 type QrCodeResponseDTO = {
   id: string;
@@ -10,10 +10,13 @@ type QrCodeResponseDTO = {
   linkId: string;
   createdAt: Date;
   updatedAt: Date;
+  link: Link | null;
 };
 
+type QrCodeWithLink = QrCode & { link?: Link | null };
+
 export const qrCodeToResponse = (
-  qrCode: QrCode,
+  qrCode: QrCodeWithLink,
   shortUrl?: string,
 ): QrCodeResponseDTO => {
   return {
@@ -26,5 +29,6 @@ export const qrCodeToResponse = (
     linkId: qrCode.linkId,
     createdAt: qrCode.createdAt,
     updatedAt: qrCode.updatedAt,
+    link: qrCode.link ?? null,
   };
 };
