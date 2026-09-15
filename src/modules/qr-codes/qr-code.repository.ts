@@ -43,6 +43,11 @@ export class QrCodeRepository {
     return prisma.qrCode.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
+      include: {
+        _count: {
+          select: { scans: true },
+        },
+      },
     });
   }
 

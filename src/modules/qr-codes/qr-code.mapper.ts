@@ -8,12 +8,16 @@ type QrCodeResponseDTO = {
   logoUrl: string | null;
   shortUrl: string;
   linkId: string;
+  scanCount: number;
   createdAt: Date;
   updatedAt: Date;
   link: Link | null;
 };
 
-type QrCodeWithLink = QrCode & { link?: Link | null };
+type QrCodeWithLink = QrCode & {
+  link?: Link | null;
+  _count?: { scans: number };
+};
 
 export const qrCodeToResponse = (
   qrCode: QrCodeWithLink,
@@ -27,6 +31,7 @@ export const qrCodeToResponse = (
     logoUrl: qrCode.logoUrl,
     shortUrl: shortUrl ?? qrCode.destinationUrl,
     linkId: qrCode.linkId,
+    scanCount: qrCode._count?.scans ?? 0,
     createdAt: qrCode.createdAt,
     updatedAt: qrCode.updatedAt,
     link: qrCode.link ?? null,

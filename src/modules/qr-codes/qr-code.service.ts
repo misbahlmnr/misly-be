@@ -74,7 +74,7 @@ export class QrCodeService {
     const qrCode = await this.qrCodeRepository.create({
       userId,
       linkId: link.id,
-      destinationUrl: shortUrl,
+      destinationUrl,
       title: title ?? link.title,
       ...(styles !== undefined ? { styles } : {}),
       ...(logoUrl !== undefined ? { logoUrl } : {}),
